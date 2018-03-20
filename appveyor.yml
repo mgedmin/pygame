@@ -21,7 +21,6 @@ init:
 install:
   - "powershell appveyor\\install.ps1"
   - "set HOME=%APPVEYOR_BUILD_FOLDER%"
-  - "set PATH=%PATH%;C:\\projects\\pygame\\pypy2-v5.10.0-win32"
   - pypy.exe -c "import platform;print(platform.python_implementation())"
   - pypy.exe -m ensurepip
   - pypy.exe -m pip install wheel

@@ -19,7 +19,7 @@ PORTTIME = -lporttime
 FREETYPE = -lfreetype
 #--EndConfig
 
-DEBUG = 
+DEBUG =
 
 #the following modules are optional. you will want to compile
 #everything you can, but you can ignore ones you don't have
@@ -32,13 +32,13 @@ mixer_music src/music.c $(SDL) $(MIXER) $(DEBUG)
 scrap src/scrap.c $(SDL) $(SCRAP) $(DEBUG)
 pypm src/pypm.c $(SDL) $(PORTMIDI) $(PORTTIME) $(DEBUG)
 
-GFX = src/SDL_gfx/SDL_gfxPrimitives.c 
-#GFX = src/SDL_gfx/SDL_gfxBlitFunc.c src/SDL_gfx/SDL_gfxPrimitives.c 
+GFX = src/SDL_gfx/SDL_gfxPrimitives.c
+#GFX = src/SDL_gfx/SDL_gfxBlitFunc.c src/SDL_gfx/SDL_gfxPrimitives.c
 gfxdraw src/gfxdraw.c $(SDL) $(GFX) $(DEBUG)
 
 #optional freetype module (do not break in multiple lines
 #or the configuration script will choke!)
-_freetype src/freetype/ft_cache.c src/freetype/ft_wrap.c src/freetype/ft_render.c  src/freetype/ft_render_cb.c src/freetype/ft_layout.c src/freetype/ft_unicode.c src/_freetype.c $(SDL) $(FREETYPE) $(DEBUG)
+#_freetype src/freetype/ft_cache.c src/freetype/ft_wrap.c src/freetype/ft_render.c  src/freetype/ft_render_cb.c src/freetype/ft_layout.c src/freetype/ft_unicode.c src/_freetype.c $(SDL) $(FREETYPE) $(DEBUG)
 
 #these modules are required for pygame to run. they only require
 #SDL as a dependency. these should not be altered

@@ -60,7 +60,7 @@ function DownloadPyPy() {
    Write-Host "File saved at" $filepath
 
    & 7z x pypy2-v5.10.0-win32.zip
-   $env:path = "$env:appveyor_build_folder\pypy2-v5.10.0-win32;$env:path"
+   $env:path = "$env:pygame\pypy2-v5.10.0-win32;$env:path"
 }
 
 
