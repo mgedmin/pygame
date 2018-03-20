@@ -43,8 +43,15 @@ function DownloadPrebuilt () {
 function DownloadPyPy() {
     $webclient = New-Object System.Net.WebClient
 
-    $download_url = "https://bitbucket.org/pypy/pypy/downloads/pypy2-v5.10.0-win32.zip"
-    $filepath = "$env:appveyor_build_folder\pypy2-v5.10.0-win32.zip"
+#    $which_pypy = "pypy2-v5.10.0-win32"
+    $which_pypy = "pypy-c-jit-94014-c5cc7018cdd5-win32"
+    $which_pypy_zip = $which_pypy + ".zip"
+
+
+#    $download_url = "https://bitbucket.org/pypy/pypy/downloads/" + $which_pypy + ".zip"
+    $download_url = "http://buildbot.pypy.org/nightly/trunk/pypy-c-jit-94014-c5cc7018cdd5-win32.zip"
+
+    $filepath = "$env:appveyor_build_folder\" + $which_pypy + ".zip"
 
     Write-Host "Downloading" $filepath "from" $download_url
     $retry_attempts = 3
@@ -59,8 +66,8 @@ function DownloadPyPy() {
    }
    Write-Host "File saved at" $filepath
 
-   & 7z x pypy2-v5.10.0-win32.zip
-   $env:path = "$env:pygame\pypy2-v5.10.0-win32;$env:path"
+   & 7z x $which_pypy_zip
+   $env:path = "$env:appveyor_build_folder\$which_pypy;$env:path"
 }
 
 

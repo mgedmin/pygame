@@ -21,7 +21,7 @@ init:
 install:
   - "powershell appveyor\\install.ps1"
   - "set HOME=%APPVEYOR_BUILD_FOLDER%"
-  - "set PATH=%PATH%;%APPVEYOR_BUILD_FOLDER%\\pypy2-v5.10.0-win32"
+  - "set PATH=%PATH%;%APPVEYOR_BUILD_FOLDER%\\pypy-c-jit-94014-c5cc7018cdd5-win32"
   - pypy.exe -c "import platform;print(platform.python_implementation())"
   - pypy.exe -m ensurepip
   - pypy.exe -m pip install wheel
