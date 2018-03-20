@@ -40,9 +40,34 @@ function DownloadPrebuilt () {
    & 7z x $prebuilt_zip
 }
 
+function DownloadPyPy() {
+    $webclient = New-Object System.Net.WebClient
+
+    $download_url = "https://bitbucket.org/pypy/pypy/downloads/pypy2-v5.10.0-win32.zip"
+    $filepath = "$env:appveyor_build_folder\pypy2-v5.10.0-win32.zip"
+
+    Write-Host "Downloading" $filepath "from" $download_url
+    $retry_attempts = 3
+    for($i=0; $i -lt $retry_attempts; $i++){
+        try {
+            $webclient.DownloadFile($download_url, $filepath)
+            break
+        }
+        Catch [Exception]{
+            Start-Sleep 1
+        }
+   }
+   Write-Host "File saved at" $filepath
+
+   7z x pypy2-v5.10.0-win32.zip | Out-Null
+   $env:path = "$env:appveyor_build_folder\pypy2-v5.10.0-win32;$env:path"
+}
+
+
 
 function main () {
-    InstallPackage $env:PYTHON wheel
+    DownloadPyPy
+    & InstallPackage $env:PYTHON wheel
     & DownloadPrebuilt
 }
 
