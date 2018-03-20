@@ -25,10 +25,9 @@ install:
   - pypy.exe -c "import platform;print(platform.python_implementation())"
   - pypy.exe -m ensurepip
   - pypy.exe -m pip install wheel
-  - "%PYTHON%/python -m pip install -U pip"  # Upgrade pip
-  - "%WITH_COMPILER% %PYTHON%/python config.py -auto"
-  - "%WITH_COMPILER% %PYTHON%/python setup.py build"
-  - "%WITH_COMPILER% %PYTHON%/python setup.py -setuptools %DISTRIBUTIONS%"
+  - "%WITH_COMPILER% pypy.exe config.py -auto"
+  - "%WITH_COMPILER% pypy.exe setup.py build"
+  - "%WITH_COMPILER% pypy.exe setup.py -setuptools %DISTRIBUTIONS%"
   - ps: "ls dist"
 
   # Install the wheel to test it
