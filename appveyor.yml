@@ -31,7 +31,7 @@ install:
   - ps: "ls dist"
 
   # Install the wheel to test it
-  - "%PYTHON%/python -m pip install --ignore-installed --pre --no-index --find-links dist/ pygame"
+  - pypy.exe -m pip install --ignore-installed --pre --no-index --find-links dist/ pygame"
 
 # Appveyor's build step is specific to .NET projects, so we build in the
 # install step instead.
@@ -40,7 +40,7 @@ build: off
 test_script:
   - "mkdir empty_folder"
   - "cd empty_folder"
-  - "%PYTHON%/python -m pygame.tests --exclude opengl"
+  - pypy.exe -m pygame.tests --exclude opengl"
 
   # Move back to the project folder
   - "cd .."
