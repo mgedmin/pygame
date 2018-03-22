@@ -40,6 +40,7 @@ build: off
 test_script:
   - "mkdir empty_folder"
   - "cd empty_folder"
+  - pypy.exe -m pygame.tests --exclude opengl"
 
   # Move back to the project folder
   - "cd .."
