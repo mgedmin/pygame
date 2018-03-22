@@ -46,6 +46,6 @@ test_script:
   - "cd .."
 
 artifacts:
-  - path: dist\*
+  - path: 'dist\*'
 
 
