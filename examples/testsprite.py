@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# like the testsprite.c that comes with sdl, this pygame version shows 
+# like the testsprite.c that comes with sdl, this pygame version shows
 #   lots of sprites moving around.
 
 
@@ -7,6 +7,7 @@ import pygame, sys, os
 from pygame.locals import *
 from random import randint
 from time import time
+import gc
 import pygame.joystick
 from pygame.compat import xrange_
 
@@ -19,6 +20,13 @@ if "-psyco" in sys.argv:
         psyco.full()
     except Exception:
         print ("No psyco for you!  psyco failed to import and run.")
+
+jit_on = True
+try:
+    import pypyjit
+except:
+    pass
+    jit_on = False
 
 main_dir = os.path.split(os.path.abspath(__file__))[0]
 data_dir = os.path.join(main_dir, 'data')
@@ -79,6 +87,9 @@ if "-alpha" in sys.argv:
 else:
     use_alpha = False
 
+plot = '-plot' in sys.argv
+
+
 print (screen_dims)
 
 
@@ -133,13 +144,13 @@ class Static(FRG.DirtySprite):
 
 
 
-def main(update_rects = True, 
+def main(update_rects = True,
         use_static = False,
         use_FastRenderGroup = False,
         screen_dims = [640, 480],
         use_alpha = False,
         flags = 0,
-        ):
+        plot = False):
     """Show lots of sprites moving around
 
     Optional keyword arguments:
@@ -151,7 +162,7 @@ def main(update_rects = True,
     flags - additional display mode flags (default no addiontal flags)
 
     """
-
+    global jit_on
     if use_FastRenderGroup:
         update_rects = True
 
@@ -196,7 +207,7 @@ def main(update_rects = True,
     Thingy.images = [sprite_surface]
     if use_static:
         Static.images = [sprite_surface2]
-    
+
     if len(sys.argv) > 1:
         try:
             numsprites = int(sys.argv[-1])
@@ -227,8 +238,15 @@ def main(update_rects = True,
     background = background.convert()
     background.fill([0,0,0])
 
-
+    frame_times = []
+    gc.disable()
+    frames_since_last_gc = 0
     while not done:
+        t0 = time()
+        for event in pygame.event.get():
+            if event.type in [KEYDOWN, QUIT, JOYBUTTONDOWN]:
+                done = True
+
         if not update_rects:
             screen.fill([0,0,0])
 
@@ -240,28 +258,88 @@ def main(update_rects = True,
         sprites.update()
 
         rects = sprites.draw(screen)
+
+        t1 = time()
+        # print (t1-t0)
+        # gc.collect(0)
+
+        if t1 - t0 > 0.011:
+            print('slow')
+        # print('frame')
+        if (t1-t0 < 0.0011 and frames_since_last_gc > 30):
+            # print('collecting')
+            frames_since_last_gc = 0
+            # gc.collect(0)
+        else:
+            frames_since_last_gc += 1
         if update_rects:
             pygame.display.update(rects)
         else:
             pygame.display.flip()
 
-
-        for event in pygame.event.get():
-            if event.type in [KEYDOWN, QUIT, JOYBUTTONDOWN]:
-                done = True
-
-
+        # frame_times.append(time() - t0)
+        frame_times.append(t1 - t0)
+        if jit_on and time() - start > 10:
+            # print('turning off pypyjit')
+            # pypyjit.set_param("off")
+            jit_on = 0
         frames += 1
     end = time()
     print ("FPS: %f" % (frames / ((end - start))))
     pygame.quit()
 
+    if plot:
+
+        msg = '\n'.join(('update_rects:%s,',
+            'use_static:%s,',
+            'use_FastRenderGroup:%s',
+            'screen_dims:%s,',
+            'use_alpha:%s,',
+            'flags: %s')) % (
+            update_rects,
+            use_static,
+            use_FastRenderGroup,
+            screen_dims,
+            use_alpha,
+            flags
+        )
+        print(msg)
+        import pickle
+        with open('spriteplot.pickle', 'wb') as picklef:
+            pickle.dump({'msg': msg, 'frame_times': frame_times}, picklef)
+
+
 
 
 if __name__ == "__main__":
-    main( update_rects,
-          use_static,
-          use_FastRenderGroup,
-          screen_dims,
-          use_alpha,
-          flags )
+
+
+    if '-plotpickle' in sys.argv:
+        import pickle
+        with open('spriteplot.pickle', 'rb') as picklef:
+            data = pickle.load(picklef)
+            print(data['msg'])
+
+        import matplotlib.pyplot as plt
+        print(len(data['frame_times']))
+        plt.plot(data['frame_times'][:1200])
+        plt.plot(data['frame_times'][-1200:])
+
+        # n, bins, patches = plt.hist(data['frame_times'], 50, normed=1, facecolor='g', alpha=0.75)
+
+        # plt.ylabel('per frame time. pypy gc.disable(), pypyjit.set_param("off") after 10s')
+        # plt.ylabel('30fps. pypy, 1000 sprites')
+        # plt.ylabel('30fps. python36, 1000 sprites, gc.disable()')
+        # plt.ylabel('30fps. pypy, 1000 sprites, gc.disable()')
+        plt.ylabel('python3.6, 100 sprites. gc.disable()')
+        # plt.ylabel('Time per frame, python3.6, gc.disable()')
+        # plt.ylabel('Time per frame, python3.6, gc.disable()')
+        plt.show()
+    else:
+        main(update_rects,
+            use_static,
+            use_FastRenderGroup,
+            screen_dims,
+            use_alpha,
+            flags,
+            plot)
