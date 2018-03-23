@@ -40,13 +40,12 @@ function DownloadPrebuilt () {
    & 7z x $prebuilt_zip
 }
 
-function DownloadPyPy() {
+// TODO: a better powershell dev would make this function reusable.
+//       add sha or even md5 checksum verification.
+function DownloadPyPy($which_pypy) {
     $webclient = New-Object System.Net.WebClient
 
-    $which_pypy = "pypy2-v5.10.0-win32"
     $which_pypy_zip = $which_pypy + ".zip"
-
-
     $download_url = "https://bitbucket.org/pypy/pypy/downloads/" + $which_pypy + ".zip"
 
     $filepath = "$env:appveyor_build_folder\" + $which_pypy + ".zip"
@@ -69,9 +68,9 @@ function DownloadPyPy() {
 }
 
 
-
 function main () {
-    DownloadPyPy
+    DownloadPyPy "pypy2-v5.10.0-win32"
+    & DownloadPyPy "pypy3-v5.10.1-win32"
     & InstallPackage $env:PYTHON wheel
     & DownloadPrebuilt
 }
