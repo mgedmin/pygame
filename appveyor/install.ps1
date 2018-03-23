@@ -43,13 +43,11 @@ function DownloadPrebuilt () {
 function DownloadPyPy() {
     $webclient = New-Object System.Net.WebClient
 
-#    $which_pypy = "pypy2-v5.10.0-win32"
-    $which_pypy = "pypy-c-jit-94014-c5cc7018cdd5-win32"
+    $which_pypy = "pypy2-v5.10.0-win32"
     $which_pypy_zip = $which_pypy + ".zip"
 
 
-#    $download_url = "https://bitbucket.org/pypy/pypy/downloads/" + $which_pypy + ".zip"
-    $download_url = "http://buildbot.pypy.org/nightly/trunk/pypy-c-jit-94014-c5cc7018cdd5-win32.zip"
+    $download_url = "https://bitbucket.org/pypy/pypy/downloads/" + $which_pypy + ".zip"
 
     $filepath = "$env:appveyor_build_folder\" + $which_pypy + ".zip"
 
