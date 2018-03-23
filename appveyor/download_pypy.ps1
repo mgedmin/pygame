@@ -1,5 +1,6 @@
-// TODO: a better powershell dev would make this function reusable.
-//       add sha or even md5 checksum verification.
+// TODO: a better powershell dev would:
+//         - make this function reusable.
+//         - add sha or even md5 checksum verification.
 function DownloadPyPy($which_pypy) {
     $webclient = New-Object System.Net.WebClient
 

@@ -50,7 +50,7 @@ init:
 
 install:
   - "powershell appveyor\\install.ps1"
-  - "powershell appveyor\\downloadpypy.ps1 -pypy_version %PYPY_VERSION%"
+  - "powershell appveyor\\download_pypy.ps1 -pypy_version %PYPY_VERSION%"
   - "set HOME=%APPVEYOR_BUILD_FOLDER%"
   - "set PATH=%PATH%;%APPVEYOR_BUILD_FOLDER%\\%PYPY_VERSION%"
   - "%PYTHON% -m ensurepip"
