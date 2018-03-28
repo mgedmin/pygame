@@ -12,9 +12,12 @@ audio and video output, and keyboard, mouse and joystick input."""
 
 EXTRAS = {}
 
+# this attribute is modified by CI tools.
+__version__ = '1.9.4.dev0'
+
 METADATA = {
     "name":             "pygame",
-    "version":          "1.9.4.dev0",
+    "version":          __version__,
     "license":          "LGPL",
     "url":              "https://www.pygame.org",
     "author":           "Pete Shinners, Rene Dudfield, Marcus von Appen, Bob Pendleton, others...",
